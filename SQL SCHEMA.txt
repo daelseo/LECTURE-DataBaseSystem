@@ -1,0 +1,63 @@
+CREATE TABLE User
+(
+	UserID SERIAL Primary Key,
+	Name varchar(50) NOT NULL,
+	Password varchar(50) NOT NULL,
+	Email varchar(50) NOT NULL,
+	NotificationChannel varchar(100) NOT NULL
+	
+);
+
+CREATE TABLE Event
+(
+	EventID SERIAL Primary Key,
+	UserID int NOT NULL,
+	Name varchar(50) NOT NULL,
+	Description varchar(100) NOT NULL,
+	Start datetime NOT NULL,
+	End datetime NOT NULL,
+	AllDay boolean DEFAULT FALSE,
+	FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
+
+CREATE TABLE User_calendar
+(
+	UserID int NOT NULL,
+	CalendarID int NOT NULL,
+	FOREIGN KEY (UserID) REFERENCES User(UserID),
+	FOREIGN KEY (CalendarID) REFERENCES Calendar(CalendarID)
+);
+
+CREATE TABLE Notification
+(
+	NotificationID SERIAL Primary Key,
+	Effective datetime NOT NULL,
+	Interval int NOT NULL,
+	UserID int NOT NULL,
+	FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
+
+CREATE TABLE Event_Notification
+(
+	EventID int NOT NULL,
+	NotificationID int NOT NULL,
+	FOREIGN KEY (EventID) REFERENCES Event(EventID),
+	FOREIGN KEY (NotificationID) REFERENCES Notification(NotificationID)
+);
+
+CREATE TABLE Calendar
+(
+	CalendarID SERIAL Primary Key,
+	Name varchar(50) NOT NULL,
+	Description varchar(100) NOT NULL,
+	Timezone timestamp with time zone NOT NULL
+);
+
+CREATE TABLE Calendar_event
+(
+	CalendarID int NOT NULL,
+	EventID int NOT NULL,
+	Role varchar(100) NOT NULL,
+	FOREIGN KEY (CalendarID) REFERENCES Calendar(CalendarID),
+	FOREIGN KEY (EventID) REFERENCES Event(EventID)
+);
